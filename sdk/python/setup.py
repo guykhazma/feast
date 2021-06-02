@@ -100,6 +100,10 @@ CI_REQUIRED = [
     "google-cloud-core==1.4.*",
 ]
 
+AWS_REQUIRED = [
+    "boto3==1.17.*",
+]
+
 # README file from Feast repo root directory
 repo_root = (
     subprocess.Popen(["git", "rev-parse", "--show-toplevel"], stdout=subprocess.PIPE)
@@ -191,6 +195,7 @@ setup(
     extras_require={
         "dev": ["mypy-protobuf==1.*", "grpcio-testing==1.*"],
         "ci": CI_REQUIRED,
+        "aws": AWS_REQUIRED,
         "gcp": GCP_REQUIRED,
     },
     include_package_data=True,

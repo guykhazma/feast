@@ -52,8 +52,25 @@ class DatastoreOnlineStoreConfig(FeastBaseModel):
     """ (optional) Amount of feature rows per batch being written into Datastore"""
 
 
-OnlineStoreConfig = Union[DatastoreOnlineStoreConfig, SqliteOnlineStoreConfig]
+class DynamoDbOnlineStoreConfig(FeastBaseModel):
+    """Online store config for DynamoDB store"""
 
+    type: Literal["dynamodb"] = "dynamodb"
+    """Online store type selector"""
+
+    rcu: Optional[PositiveInt] = 5
+    """ Read capacity unit """
+
+    wcu: Optional[PositiveInt] = 5
+    """ Write capacity unit """
+
+    region_name: Optional[StrictStr] = None
+    """ AWS Region Name """
+
+
+OnlineStoreConfig = Union[
+    DatastoreOnlineStoreConfig, SqliteOnlineStoreConfig, DynamoDbOnlineStoreConfig
+]
 
 class FileOfflineStoreConfig(FeastBaseModel):
     """ Offline store config for local (file-based) store """
@@ -141,11 +158,13 @@ class RepoConfig(FeastBaseModel):
                 values["online_store"]["type"] = "sqlite"
             elif values["provider"] == "gcp":
                 values["online_store"]["type"] = "datastore"
+            elif values["provider"] == "aws_dynamodb":
+                values["online_store"]["type"] = "dynamodb"
 
         online_store_type = values["online_store"]["type"]
 
         # Make sure the user hasn't provided the wrong type
-        assert online_store_type in ["datastore", "sqlite"]
+        assert online_store_type in ["datastore", "sqlite", "dynamodb"]
 
         # Validate the dict to ensure one of the union types match
         try:
@@ -153,6 +172,8 @@ class RepoConfig(FeastBaseModel):
                 SqliteOnlineStoreConfig(**values["online_store"])
             elif online_store_type == "datastore":
                 DatastoreOnlineStoreConfig(**values["online_store"])
+            elif online_store_type == "dynamodb":
+                DynamoDbOnlineStoreConfig(**values["online_store"])
             else:
                 raise ValueError(f"Invalid online store type {online_store_type}")
         except ValidationError as e:
