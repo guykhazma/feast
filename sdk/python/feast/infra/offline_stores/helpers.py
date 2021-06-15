@@ -14,7 +14,7 @@ def get_offline_store_from_config(
     """Get the offline store from offline store config"""
 
     if isinstance(offline_store_config, FileOfflineStoreConfig):
-        from feast.infra.offline_stores.file import FileOfflineStore
+        from feast.infra.offline_stores.file.file import FileOfflineStore
 
         return FileOfflineStore()
     elif isinstance(offline_store_config, BigQueryOfflineStoreConfig):

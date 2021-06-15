@@ -13,7 +13,7 @@
 # limitations under the License.
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, TypeVar, Union
 
 import pandas as pd
 import pyarrow
@@ -38,6 +38,7 @@ class OfflineStore(ABC):
     OfflineStore is an object used for all interaction between Feast and the service used for offline storage of
     features.
     """
+    DataFrame = TypeVar("DataFrame")
 
     @staticmethod
     @abstractmethod
@@ -63,8 +64,9 @@ class OfflineStore(ABC):
         config: RepoConfig,
         feature_views: List[FeatureView],
         feature_refs: List[str],
-        entity_df: Union[pd.DataFrame, str],
+        entity_df: Union[DataFrame, str],
         registry: Registry,
         project: str,
+        engine: str = 'pandas'
     ) -> RetrievalJob:
         pass
