@@ -26,9 +26,11 @@ from feast.feature_view import FeatureView
 from feast.registry import Registry
 from feast.repo_config import RepoConfig
 
+
 @dataclass(frozen=True)
 class RetrievalJob(ABC):
     """RetrievalJob is used to manage the execution of a historical feature retrieval"""
+
     config: RepoConfig
     feature_views: List[FeatureView]
     feature_refs: List[str]
@@ -43,11 +45,11 @@ class RetrievalJob(ABC):
 
     def to_engine(self, engine_module) -> Any:
         """Return a dataframe representation compatible with the given engine"""
-        # Split provider into module and class names by finding the right-most dot.
-        # For example, provider 'foo.bar.MyProvider' will be parsed into 'foo.bar' and 'MyProvider'
+        # Split engine into module and class names by finding the right-most dot.
+        # For example, provider 'foo.bar.MyEngine' will be parsed into 'foo.bar' and 'MyEngine'
         module_name, class_name = engine_module.rsplit(".", 1)
 
-        # Try importing the module that contains the custom provider
+        # Try importing the module that contains the custom engine
         try:
             module = importlib.import_module(module_name)
         except Exception as e:

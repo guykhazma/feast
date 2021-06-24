@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Any, Callable, List, Optional, Union
 
 import pandas as pd
-from pandas.core.frame import DataFrame
 import pyarrow
 import pytz
+from pandas.core.frame import DataFrame
 from pydantic.typing import Literal
 
 from feast.data_source import DataSource, FileSource
@@ -120,7 +120,7 @@ class FileRetrievalJob(RetrievalJob):
             # Build a list of entity columns to join on (from the right table)
             join_keys = []
             for entity_name in feature_view.entities:
-                entity = self.registry.get_entity(entity_name, project)
+                entity = self.registry.get_entity(entity_name, self.project)
                 join_keys.append(entity.join_key)
             right_entity_columns = join_keys
             right_entity_key_columns = [event_timestamp_column] + right_entity_columns
@@ -170,7 +170,6 @@ class FileRetrievalJob(RetrievalJob):
             [entity_df_event_timestamp_col] + current_cols
         ]
 
-        # Only execute the evaluation function to build the final historical retrieval dataframe at the last moment.
         return entity_df_with_features
 
 
