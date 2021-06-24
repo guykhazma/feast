@@ -2,7 +2,7 @@ import time
 import uuid
 from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta
-from typing import List, Optional, Set, Union
+from typing import Any, List, Optional, Set, Union
 
 import pandas
 import pyarrow
@@ -98,7 +98,7 @@ class BigQueryOfflineStore(OfflineStore):
         config: RepoConfig,
         feature_views: List[FeatureView],
         feature_refs: List[str],
-        entity_df: Union[pandas.DataFrame, str],
+        entity_df: Any,
         registry: Registry,
         project: str,
     ) -> RetrievalJob:
